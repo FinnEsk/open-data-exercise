@@ -71,7 +71,7 @@ public class App extends PApplet {
 
 		// complete this method - DELETE THE EXAMPLE CODE BELOW
 
-		// remove the code below and replace with your own code that solves the problem indicated in the comments
+		/*// remove the code below and replace with your own code that solves the problem indicated in the comments
 		// example of how to create a marker at a specific location and place it on the map
 		float lat = 40.737375365084105f; // latitude of a location of interest
 		float lng = -74.00101207586745f; // longitude of a location of interest
@@ -80,7 +80,19 @@ public class App extends PApplet {
 		float markerRadius = pedestrianCount * SCALE_FACTOR; // scale down the marker radius to look better on the map
 		float[] markerColor = {255, 0, 0, 127}; // a color, specified as a combinatino of red, green, blue, and alpha (i.e. transparency), each represented as numbers between 0 and 255.
 		MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor); // don't worry about the `this` keyword for now... just make sure it's there.
-		map.addMarker(marker);
+		map.addMarker(marker); */
+
+		for(String[] eachline : data){
+			float lat = Float.parseFloat(eachline[0]);
+			float lng = Float.parseFloat(eachline[1]);
+			Location markerLocation = new Location(lat, lng);
+			int pedestrianCount = // should this be a for loop that goes through and gets the pedestrian counts for every morning? or just one morning?
+			float markerRadius = pedestrianCount * SCALE_FACTOR;
+			float[] markerColor = {255, 0, 0, 127};
+			MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor);
+			map.addMarker(marker);
+		}
+
 	}
 
 	/**
@@ -167,6 +179,7 @@ public class App extends PApplet {
 		}
 
 		String[] lines = fullText.split("\n");
+
 		return lines;
 	}
 
@@ -195,13 +208,26 @@ public class App extends PApplet {
 		
 		String[][] allLines = new String[lines.length][90];
 
+
 		for(int i = 0; i < lines.length; i++){
 			allLines[i] = lines[i].split(", ");
-			for(String[] str : allLines){
-				
-			}
 		}
 
+		//cleaning up the lines
+		for(String[] line : allLines){
+			// getting ride of the left perenthesis "(" on the latitude
+			String noPerenLeft = line[1].substring(1);
+			line[1] = noPerenLeft;
+
+			// getting ride of the right perenthesis ")" on the longtitude
+			String noPerenRight = line[2].substring(0, line[2].length()-1);
+			line[2] = noPerenRight;
+
+			// getting rid of the "point" at the beginnig of each line
+			String[] noPoint = Arrays.copyOfRange(line, 1, line.length);
+			line = noPoint;
+		}
+		
 		return allLines;
 	}
 
