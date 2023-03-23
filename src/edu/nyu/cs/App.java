@@ -86,7 +86,7 @@ public class App extends PApplet {
 			float lat = Float.parseFloat(eachline[0]);
 			float lng = Float.parseFloat(eachline[1]);
 			Location markerLocation = new Location(lat, lng);
-			int pedestrianCount = // should this be a for loop that goes through and gets the pedestrian counts for every morning? or just one morning?
+			int pedestrianCount = Integer.parseInt(eachline[eachline.length-2]);// should this be a for loop that goes through and gets the pedestrian counts for every morning? or just one morning?
 			float markerRadius = pedestrianCount * SCALE_FACTOR;
 			float[] markerColor = {255, 0, 0, 127};
 			MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor);
@@ -105,6 +105,16 @@ public class App extends PApplet {
 		clearMap(); // clear any markers previously placed on the map
 		mapTitle = "May 2021 Evening Pedestrian Counts";
 		// complete this method
+		for(String[] eachline : data){
+			float lat = Float.parseFloat(eachline[0]);
+			float lng = Float.parseFloat(eachline[1]);
+			Location markerLocation = new Location(lat, lng);
+			int pedestrianCount = Integer.parseInt(eachline[eachline.length-1]);// should this be a for loop that goes through and gets the pedestrian counts for every morning? or just one morning?
+			float markerRadius = pedestrianCount * SCALE_FACTOR;
+			float[] markerColor = {255, 255, 0, 127};
+			MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor);
+			map.addMarker(marker);
+		}
 	}
 
 	/**
@@ -116,6 +126,19 @@ public class App extends PApplet {
 		clearMap(); // clear any markers previously placed on the map
 		mapTitle = "Difference Between May 2021 Evening and Morning Pedestrian Counts";
 		// complete this method
+
+		for(String[] eachline : data){
+			float lat = Float.parseFloat(eachline[0]);
+			float lng = Float.parseFloat(eachline[1]);
+			Location markerLocation = new Location(lat, lng);
+			int morningCount = Integer.parseInt(eachline[eachline.length-2]);// should this be a for loop that goes through and gets the pedestrian counts for every morning? or just one morning?
+			int eveningCount = Integer.parseInt(eachline[eachline.length-1]);
+			int pedestrianCount = eveningCount - morningCount;
+			float markerRadius = pedestrianCount * SCALE_FACTOR;
+			float[] markerColor = {255, 255, 0, 127};
+			MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor);
+			map.addMarker(marker);
+		}
 	}
 
 	/**
@@ -129,6 +152,18 @@ public class App extends PApplet {
 		clearMap(); // clear any markers previously placed on the map
 		mapTitle = "Difference Between May 2021 and May 2019 Pedestrian Counts";
 		// complete this method
+
+		for(String[] eachline : data){
+			float lat = Float.parseFloat(eachline[0]);
+			float lng = Float.parseFloat(eachline[1]);
+			Location markerLocation = new Location(lat, lng);
+
+
+
+			
+		}
+
+		
 	}
 
 	/**
@@ -168,6 +203,7 @@ public class App extends PApplet {
 		String fullText = "";
 		try{
 			Scanner scnr = new Scanner(new File(filepath));
+			scnr.nextLine();
 			while (scnr.hasNextLine()){
 				String line = scnr.nextLine();
 				fullText += line + "\n";
@@ -209,8 +245,10 @@ public class App extends PApplet {
 		String[][] allLines = new String[lines.length][90];
 
 
-		for(int i = 0; i < lines.length; i++){
-			allLines[i] = lines[i].split(", ");
+		for(int i = 0; i < lines.length; i++){ //create substring to filter out the "point" 
+			String noPoint = lines[i].substring(5);
+			lines[i] = noPoint;
+			allLines[i] = lines[i].split("[ ,]");
 		}
 
 		//cleaning up the lines
@@ -222,10 +260,6 @@ public class App extends PApplet {
 			// getting ride of the right perenthesis ")" on the longtitude
 			String noPerenRight = line[2].substring(0, line[2].length()-1);
 			line[2] = noPerenRight;
-
-			// getting rid of the "point" at the beginnig of each line
-			String[] noPoint = Arrays.copyOfRange(line, 1, line.length);
-			line = noPoint;
 		}
 		
 		return allLines;
