@@ -88,14 +88,19 @@ public class App extends PApplet {
 
 
 		for(String[] eachline : data){
-			float lat = Float.parseFloat(eachline[0]);
-			float lng = Float.parseFloat(eachline[1]);
-			Location markerLocation = new Location(lat, lng);
-			int pedestrianCount = Integer.parseInt(eachline[eachline.length-2]);// should this be a for loop that goes through and gets the pedestrian counts for every morning? or just one morning?
-			float markerRadius = pedestrianCount * SCALE_FACTOR;
-			float[] markerColor = {255, 0, 0, 127};
-			MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor);
-			map.addMarker(marker);
+			if(eachline[eachline.length-2].isEmpty()){
+				continue;
+			}
+			else{ 
+				float lat = Float.parseFloat(eachline[0]);
+				float lng = Float.parseFloat(eachline[1]);
+				Location markerLocation = new Location(lat, lng);
+				int pedestrianCount = Integer.parseInt(eachline[eachline.length-2]);// should this be a for loop that goes through and gets the pedestrian counts for every morning? or just one morning?
+				float markerRadius = pedestrianCount * SCALE_FACTOR;
+				float[] markerColor = {255, 0, 0, 127};
+				MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor);
+				map.addMarker(marker);
+			}
 		}
 
 	}
@@ -111,14 +116,19 @@ public class App extends PApplet {
 		mapTitle = "May 2021 Evening Pedestrian Counts";
 		// complete this method
 		for(String[] eachline : data){
-			float lat = Float.parseFloat(eachline[0]);
-			float lng = Float.parseFloat(eachline[1]);
-			Location markerLocation = new Location(lat, lng);
-			int pedestrianCount = Integer.parseInt(eachline[eachline.length-1]);// should this be a for loop that goes through and gets the pedestrian counts for every morning? or just one morning?
-			float markerRadius = pedestrianCount * SCALE_FACTOR;
-			float[] markerColor = {255, 255, 0, 127};
-			MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor);
-			map.addMarker(marker);
+			if(eachline[eachline.length-1].isEmpty()){
+				continue;
+			}
+			else{
+				float lat = Float.parseFloat(eachline[0]);
+				float lng = Float.parseFloat(eachline[1]);
+				Location markerLocation = new Location(lat, lng);
+				int pedestrianCount = Integer.parseInt(eachline[eachline.length-1]);// should this be a for loop that goes through and gets the pedestrian counts for every morning? or just one morning?
+				float markerRadius = pedestrianCount * SCALE_FACTOR;
+				float[] markerColor = {255, 255, 0, 127};
+				MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor);
+				map.addMarker(marker);
+			}
 		}
 	}
 
@@ -134,24 +144,30 @@ public class App extends PApplet {
 
 		//If the evening count is greater, the marker should be a green bubble, otherwise, the marker should be a red bubble. 
 		for(String[] eachline : data){
-			float lat = Float.parseFloat(eachline[0]);
-			float lng = Float.parseFloat(eachline[1]);
-			Location markerLocation = new Location(lat, lng);
-			int morningCount = Integer.parseInt(eachline[eachline.length-2]);
-			int eveningCount = Integer.parseInt(eachline[eachline.length-1]);
-			int pedestrianCount = eveningCount - morningCount;
-			float[] markerColor = {0, 255, 0, 127};
-
-			// if the morning count is greater this changes the pedestrian count to a positive number and the makes the marker red
-			if(pedestrianCount < 0){
-				pedestrianCount = pedestrianCount * -1;
-				markerColor[0] = 255;
-				markerColor[1] = 0;
+			if(eachline[eachline.length-1].isEmpty() || eachline[eachline.length-2].isEmpty()) {
+				continue;
 			}
+			else{
 
-			float markerRadius = pedestrianCount * SCALE_FACTOR;
-			MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor);
-			map.addMarker(marker);
+				float lat = Float.parseFloat(eachline[0]);
+				float lng = Float.parseFloat(eachline[1]);
+				Location markerLocation = new Location(lat, lng);
+				int morningCount = Integer.parseInt(eachline[eachline.length-2]);
+				int eveningCount = Integer.parseInt(eachline[eachline.length-1]);
+				int pedestrianCount = eveningCount - morningCount;
+				float[] markerColor = {0, 255, 0, 127};
+
+				// if the morning count is greater this changes the pedestrian count to a positive number and the makes the marker red
+				if(pedestrianCount < 0){
+					pedestrianCount = pedestrianCount * -1;
+					markerColor[0] = 255;
+					markerColor[1] = 0;
+				}
+
+				float markerRadius = pedestrianCount * SCALE_FACTOR;
+				MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor);
+				map.addMarker(marker);
+			}
 		}
 	}
 
@@ -212,7 +228,12 @@ public class App extends PApplet {
 			// create int array
 			int[] numArray = new int[eachline.length];
 			for(int i = 0; i < eachline.length; i++){
-				numArray[i] = Integer.parseInt(eachline[i]);
+				if(eachline[i].isEmpty()){
+					numArray[i] = 0;
+				}
+				else{
+					numArray[i] = Integer.parseInt(eachline[i]);
+				}
 			}
 
 			// find the largest num in array
@@ -249,7 +270,12 @@ public class App extends PApplet {
 			// create int array
 			int[] numArray = new int[eachline.length];
 			for(int i = 0; i < eachline.length; i++){
-				numArray[i] = Integer.parseInt(eachline[i]);
+				if(eachline[i].isEmpty()){
+					numArray[i] = 0;
+				}
+				else{
+					numArray[i] = Integer.parseInt(eachline[i]);
+				}
 			}
 
 			// find the smallest num in array
