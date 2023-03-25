@@ -60,7 +60,11 @@ public class App extends PApplet {
 		Scanner scnr = new Scanner(System.in);
 		char key = scnr.next().charAt(0);
 
-		switch(key){
+		if(key == 1){
+			showMay2021MorningCounts(data);
+		}
+
+		/* switch(key){
 			case '1':
 				showMay2021MorningCounts(data);
 			case '2':
@@ -72,8 +76,8 @@ public class App extends PApplet {
 			case '5':
 				customVisualization1(data);
 			case '6':
-				customVisualization2(data);
-		}
+				 customVisualization2(data);  
+		} */
 	}
 
 	/**
