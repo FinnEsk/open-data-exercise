@@ -57,6 +57,23 @@ public class App extends PApplet {
 		// System.out.println("Key pressed: " + key);
 		// complete this method
 
+		Scanner scnr = new Scanner(System.in);
+		char key = scnr.next().charAt(0);
+
+		switch(key){
+			case '1':
+				showMay2021MorningCounts(data);
+			case '2':
+				showMay2021EveningCounts(data);
+			case '3':
+				showMay2021EveningMorningCountsDifference(data);
+			case '4':
+				showMay2021VersusMay2019Counts(data);
+			case '5':
+				customVisualization1(data);
+			case '6':
+				customVisualization2(data);
+		}
 	}
 
 	/**
@@ -69,18 +86,6 @@ public class App extends PApplet {
 		clearMap(); // clear any markers previously placed on the map
 		mapTitle = "May 2021 Morning Pedestrian Counts";
 
-		// complete this method - DELETE THE EXAMPLE CODE BELOW
-
-		/*// remove the code below and replace with your own code that solves the problem indicated in the comments
-		// example of how to create a marker at a specific location and place it on the map
-		float lat = 40.737375365084105f; // latitude of a location of interest
-		float lng = -74.00101207586745f; // longitude of a location of interest
-		Location markerLocation = new Location(lat, lng); // create a Location object
-		int pedestrianCount = 11024; // an example pedestrian count (in reality, you will get these from a file)
-		float markerRadius = pedestrianCount * SCALE_FACTOR; // scale down the marker radius to look better on the map
-		float[] markerColor = {255, 0, 0, 127}; // a color, specified as a combinatino of red, green, blue, and alpha (i.e. transparency), each represented as numbers between 0 and 255.
-		MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor); // don't worry about the `this` keyword for now... just make sure it's there.
-		map.addMarker(marker); */
 
 		for(String[] eachline : data){
 			float lat = Float.parseFloat(eachline[0]);
@@ -127,15 +132,24 @@ public class App extends PApplet {
 		mapTitle = "Difference Between May 2021 Evening and Morning Pedestrian Counts";
 		// complete this method
 
+		//If the evening count is greater, the marker should be a green bubble, otherwise, the marker should be a red bubble. 
 		for(String[] eachline : data){
 			float lat = Float.parseFloat(eachline[0]);
 			float lng = Float.parseFloat(eachline[1]);
 			Location markerLocation = new Location(lat, lng);
-			int morningCount = Integer.parseInt(eachline[eachline.length-2]);// should this be a for loop that goes through and gets the pedestrian counts for every morning? or just one morning?
+			int morningCount = Integer.parseInt(eachline[eachline.length-2]);
 			int eveningCount = Integer.parseInt(eachline[eachline.length-1]);
 			int pedestrianCount = eveningCount - morningCount;
+			float[] markerColor = {0, 255, 0, 127};
+
+			// if the morning count is greater this changes the pedestrian count to a positive number and the makes the marker red
+			if(pedestrianCount < 0){
+				pedestrianCount = pedestrianCount * -1;
+				markerColor[0] = 255;
+				markerColor[1] = 0;
+			}
+
 			float markerRadius = pedestrianCount * SCALE_FACTOR;
-			float[] markerColor = {255, 255, 0, 127};
 			MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor);
 			map.addMarker(marker);
 		}
@@ -157,13 +171,27 @@ public class App extends PApplet {
 			float lat = Float.parseFloat(eachline[0]);
 			float lng = Float.parseFloat(eachline[1]);
 			Location markerLocation = new Location(lat, lng);
-
-
-
 			
-		}
+			//If the counts for 2021 are greater, the marker should be a green bubble, otherwise, the marker should be a red bubble.
 
-		
+			if(eachline[eachline.length-8].isEmpty() == false && eachline[eachline.length-2].isEmpty() == false){
+				int may19Total = (Integer.parseInt(eachline[eachline.length-7]) + Integer.parseInt(eachline[eachline.length-9]))/2;
+				int may2021Total = (Integer.parseInt(eachline[eachline.length-1]) + Integer.parseInt(eachline[eachline.length-3]))/2;
+				int pedestrianCount = may2021Total - may19Total;
+				float[] markerColor = {0, 255, 0, 127};
+				
+				// if the 2019 count is greater this makes it a positive number and changes the marker color
+				if(pedestrianCount < 0){
+					pedestrianCount = pedestrianCount * -1;
+					markerColor[0] = 255;
+					markerColor[1] = 0;
+				}
+
+				float markerRadius = pedestrianCount * SCALE_FACTOR;
+				MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor);
+				map.addMarker(marker);
+			}
+		}	
 	}
 
 	/**
@@ -174,8 +202,33 @@ public class App extends PApplet {
 	 */
 	public void customVisualization1(String[][] data) {
 		clearMap(); // clear any markers previously placed on the map
-		mapTitle = "Enter Custom Map 1 Title Here";
+		mapTitle = "Highest Recorded Pedestrain Count";
 		// complete this method		
+		for(String[] eachline : data){
+			float lat = Float.parseFloat(eachline[0]);
+			float lng = Float.parseFloat(eachline[1]);
+			Location markerLocation = new Location(lat, lng);
+
+			// create int array
+			int[] numArray = new int[eachline.length];
+			for(int i = 0; i < eachline.length; i++){
+				numArray[i] = Integer.parseInt(eachline[i]);
+			}
+
+			// find the largest num in array
+			int max = numArray[0];
+			for(int i = 0; i < numArray.length; i++){
+				if(numArray[i] > max){
+					max = numArray[i];
+				}
+			}
+
+			int pedestrianCount = max;
+			float markerRadius = pedestrianCount * SCALE_FACTOR;
+			float[] markerColor = {255, 50, 255, 127};
+			MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor);
+			map.addMarker(marker);
+		}
 	}
 
 	/**
@@ -186,8 +239,33 @@ public class App extends PApplet {
 	 */
 	public void customVisualization2(String[][] data) {
 		clearMap(); // clear any markers previously placed on the map
-		mapTitle = "Enter Custom Map 2 Title Here";
+		mapTitle = "Lowest Recorded Pedestrian Count";
 		// complete this method	
+		for(String[] eachline : data){
+			float lat = Float.parseFloat(eachline[0]);
+			float lng = Float.parseFloat(eachline[1]);
+			Location markerLocation = new Location(lat, lng);
+
+			// create int array
+			int[] numArray = new int[eachline.length];
+			for(int i = 0; i < eachline.length; i++){
+				numArray[i] = Integer.parseInt(eachline[i]);
+			}
+
+			// find the smallest num in array
+			int min = numArray[0];
+			for(int i = 0; i < numArray.length; i++){
+				if(numArray[i] < min){
+					min = numArray[i];
+				}
+			}
+
+			int pedestrianCount = min;
+			float markerRadius = pedestrianCount * SCALE_FACTOR;
+			float[] markerColor = {255, 255, 50, 127};
+			MarkerBubble marker = new MarkerBubble(this, markerLocation, markerRadius, markerColor);
+			map.addMarker(marker);
+		}
 	}
 
 	/**
